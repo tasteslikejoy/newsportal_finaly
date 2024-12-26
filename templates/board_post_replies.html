@@ -1,0 +1,41 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Моя борда объявлений
+{% endblock title %}
+
+{% block content %}
+    <h2>{{ title }}</h2>
+    <h4>Категория - {{ category }}</h4>
+    <p>{{ created }}</p>
+    <hr>
+{% if replies %}
+    {% for reply in replies %}
+        <h3>Автор - {{ reply.author }}</h3>
+        <p>{{ reply.created }}</p>
+        <hr>
+        <p>{{ reply.text }}</p>
+        <p></p>
+        <hr>
+    {% endfor %}
+<!--
+    <table cellspacing="10" cellpadding="5" border="1">
+        <tr>
+            <td><b>Дата создания</b></td>
+            <td><b>Текст отклика</b></td>
+        </tr>
+        {% for reply in replies %}
+        <tr>
+            <td>{{ reply.created }}</td>
+            <td>{{ reply.text }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+-->
+
+{% else %}
+  <h2>Объявлений нет</h2>
+{% endif %}
+{% endblock content %}

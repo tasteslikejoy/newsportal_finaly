@@ -1,0 +1,67 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_tags %}
+{% load custom_filters %}
+
+{% block title %}
+Board
+{% endblock title %}
+
+{% block content %}
+    <h3>{% current_time '%Y %b %d' %}</h3>
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти" />
+    </form>
+    <hr>
+
+{% if replies %}
+    <table cellspacing="15" cellpadding="10" border="1">
+        <tr>
+            <td><b>Автор</b></td>
+            <td><b>Дата создания</b></td>
+            <td><b>Содержание</b></td>
+        </tr>
+        {% for reply in replies %}
+        <tr>
+            <td>{{ reply.author }}</td>
+            <td>{{ reply.created }}</td>
+            <td>{{ reply.text|censor }}</td>
+            {% if not reply.accept %}
+                <td><a href="{% url 'reply_accept' reply.id %}" class="btn btn-secondary"><u>Принять</u></a></td>
+            {% else %}
+                <td><span class="btn btn-primary">Принято</span></td>
+            {% endif %}
+            <td><a href="{% url 'reply_delete' reply.id %}" class="btn btn-secondary"><u>Удалить</u></a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Откликов нет</h2>
+{% endif %}
+
+<p></p>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{% url_replace page=1 %}">&laquo; first</a>
+            {% if page_obj.previous_page_number != 1 %}
+                <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+
+        <span class="current">
+            {% if  page_obj.paginator.num_pages != 1 %}
+                {{ page_obj.number }}
+            {% endif %}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+            {% if page_obj.paginator.num_pages != page_obj.next_page_number %}
+                <a href="?{% url_replace page=page_obj.paginator.num_pages %}">last &raquo;</a>
+            {% endif %}
+        {% endif %}
+    </span>
+</div>
+{% endblock content %}

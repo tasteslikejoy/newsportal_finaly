@@ -1,0 +1,34 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Объявления
+{% endblock title %}
+
+{% block content %}
+
+{% if category %}
+    <h3>Категория <strong>"{{ category }}"</strong> - {{ category_list|length }} объявлений.</h3>
+{% else %}
+    <h3>Ошибка. Нет такой категории.</h3>
+{% endif %}
+  <hr>
+
+{% if category_list %}
+    <table cellspacing="10" cellpadding="5" border="1">
+        <tr>
+            <td><b>Дата создания</b></td>
+            <td><b>Заголовок</b></td>
+        </tr>
+        {% for post in category_list %}
+        <tr>
+            <td>{{ post.created|date:"d M Y" }}</td>
+            <td><a href="{% url 'post_details' post.id %}">{{ post.title|censor }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+  <h2>Объявлений нет</h2>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Моя борда объявлений
+{% endblock title %}
+
+{% block content %}
+    <h1>Мои объявления</h1>
+{% if posts %}
+    <table cellspacing="10" cellpadding="5" border="1">
+        <tr>
+            <td><b>Дата создания</b></td>
+            <td><b>Категория</b></td>
+            <td><b>Заголовок</b></td>
+            <td><b>Отзывов</b></td>
+            <td><b>Последний</b></td>
+            <td></td>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.created|date:"d M Y" }}</td>
+            <td><a href="{% url 'category_list' post.category %}">{{ post.get_category_display }}</a></td>
+            <td><a href="{% url 'post_details' post.id %}">{{ post.title|censor }}</a></td>
+            <td>{{ post.replies.all|length }}</td>
+            <td>{{ post.replies.last.created }}</td>
+            <td><a href="{% url 'board_post_replies' request.user.username post.id %}" class="btn btn-secondary btn-sm">Посмотреть</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% else %}
+  <h2>Объявлений нет</h2>
+{% endif %}
+{% endblock content %}

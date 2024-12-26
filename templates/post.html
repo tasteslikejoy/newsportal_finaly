@@ -1,0 +1,21 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+    <h1>{{ post.title|censor }}</h1>
+    <h3>Автор - "{{ post.author.username }}"</h3>
+    <h5>Категория - <a href="{% url 'category_list' post.category %}">{{ post.get_category_display }}</a></h5>
+    <p>{{ post.created|date:"d M Y" }}</p>
+
+    {% if request.user.is_authenticated and post.author != request.user %}
+        <p class="text-left"><a href="{% url 'reply' post.id %}" class="btn btn-secondary btn-sm">Оставить отклик</a></p>
+    {% endif %}
+
+    <hr>
+    {{ post.content|safe }}
+{% endblock content %}
